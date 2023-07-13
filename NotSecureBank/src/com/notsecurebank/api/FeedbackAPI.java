@@ -18,6 +18,8 @@ import com.notsecurebank.model.Feedback;
 import com.notsecurebank.util.OperationsUtil;
 import com.notsecurebank.util.ServletUtil;
 
+import org.owasp.encoder.Encode;
+
 @Path("/feedback")
 public class FeedbackAPI extends NotSecureBankAPI {
 
@@ -26,6 +28,7 @@ public class FeedbackAPI extends NotSecureBankAPI {
     @POST
     @Path("/submit")
     @Produces("application/json")
+
     public Response sendFeedback(String bodyJSON, @Context HttpServletRequest request) throws JSONException {
         LOG.info("sendFeedback");
 
@@ -45,10 +48,10 @@ public class FeedbackAPI extends NotSecureBankAPI {
         String comments;
 
         try {
-            name = (String) myJson.get("name");
-            email = (String) myJson.get("email");
-            subject = (String) myJson.get("subject");
-            comments = (String) myJson.get("message");
+            name = Encode.forHtml((String) myJson.get("name"));
+            email = Encode.forHtml((String) myJson.get("email"));
+            subject = Encode.forHtml((String) myJson.get("subject"));
+            comments = Encode.forHtml((String) myJson.get("message"));
         } catch (JSONException e) {
             LOG.error(e.toString());
             return Response.status(400).entity("{\"Error\": \"Body does not contain all the correct attributes\"}").build();
@@ -57,13 +60,13 @@ public class FeedbackAPI extends NotSecureBankAPI {
         String feedbackId = OperationsUtil.sendFeedback(name, email, subject, comments);
 
         if (feedbackId != null) {
-            response = "{\"status\":\"Thank you!\",\"feedbackId\":\"" + feedbackId + "\"}";
+            response = "{\"status\":\"Thank you!\",\"feedbackId\":\"" + Encode.forHtml(feedbackId) + "\"}";
             try {
                 myJson = new JSONObject(response);
-                return Response.status(200).entity(myJson.toString()).build();
+                return Response.status(200).entity(Encode.forHtml(myJson.toString())).build();
             } catch (JSONException e) {
                 LOG.error(e.toString());
-                return Response.status(500).entity("{\"Error\":\"Unknown internal error:" + e.getLocalizedMessage() + "\"}").build();
+                return Response.status(500).entity("{\"Error\":\"Unknown internal error:" + Encode.forHtml(e.getLocalizedMessage()) + "\"}").build();
             }
         } else {
             myJson = new JSONObject();
@@ -71,7 +74,7 @@ public class FeedbackAPI extends NotSecureBankAPI {
             myJson.put("email", email);
             myJson.put("subject", subject);
             myJson.put("comments", comments);
-            return Response.status(200).entity(myJson.toString()).build();
+            return Response.status(200).entity(Encode.forHtml(myJson.toString())).build();
         }
     }
 
