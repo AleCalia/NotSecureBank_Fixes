@@ -46,6 +46,10 @@
 			<td align="right" valign="top">Question/Comment:</td>
 			<td><textarea cols="65" name="comments" rows="8" wrap="PHYSICAL" align="top">${fn:escapeXml(request.getParameter("comments"))}</textarea></td>
 		  </tr>
+		  <tr>
+		    <td>&nbsp;</td>
+		    <td><input type=submit value=" Submit " name="submit">&nbsp;<input type=reset value=" Clear Form " name="reset"></td>
+		  </tr>
 		</table>
 		</form>
 		
