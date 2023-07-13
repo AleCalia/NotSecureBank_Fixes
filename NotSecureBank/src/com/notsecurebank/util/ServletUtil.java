@@ -277,4 +277,12 @@ public class ServletUtil {
         request.getSession().setAttribute("specialPrizeCode", specialPrizeCode);
         return specialPrizeCode;
     }
+
+    // Retrieve user role or any other information needed to determine admin privileges
+    public static boolean isAdmin(HttpServletRequest request) {
+        String userRole = getRole(request);
+
+        // Check if the user role indicates admin privileges
+        return "admin".equals(userRole);
+    }
 }

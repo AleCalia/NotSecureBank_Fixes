@@ -85,6 +85,12 @@ public class AdminAPI extends NotSecureBankAPI {
             return Response.status(400).entity(response).build();
         }
 
+        // Checking if user has admin privileges
+        if (!ServletUtil.isAdmin(request)) {
+            String response = "{\"error\":\"Access denied. User does not have sufficient privileges.\"}";
+            return Response.status(403).entity(response).build();
+        }
+
         String firstname;
         String lastname;
         String username;
