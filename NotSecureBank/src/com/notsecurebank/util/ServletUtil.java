@@ -280,7 +280,7 @@ public class ServletUtil {
 
     // Retrieve user role or any other information needed to determine admin privileges
     public static boolean isAdmin(HttpServletRequest request) {
-        String userRole = getRole(request);
+        String userRole = getRole(request.getSession().getAttribute(ServletUtil.SESSION_ATTR_USER));
 
         // Check if the user role indicates admin privileges
         return "admin".equals(userRole);
